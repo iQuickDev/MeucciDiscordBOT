@@ -15,7 +15,7 @@ module.exports = {
 		spottedText +=
 			'\n[Spot inviato dal bot di discord del server di scuola (discord.gg/EhcYybM5CD)]'
 		try {
-			let request = await fetch('https://api.tellonym.me/tells/new', {
+			const request = await fetch('https://api.tellonym.me/tells/new', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -25,13 +25,15 @@ module.exports = {
 					isSnapchatInAppBrowser: false,
 					isSenderRevealed: false,
 					tell: spottedText,
-					userId: /*81836474*/ 73789721,
+					userId: 73789721,
 					limit: 25,
 				}),
 			})
 
 			if (request.statusText != 'OK')
+			{
 				throw new Error('La richiesta non è andata a buon fine')
+			}
 		} catch (error) {
 			await interaction.reply({
 				embeds: [
