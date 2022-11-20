@@ -1,24 +1,24 @@
-const { SlashCommandBuilder } = require('discord.js')
+const { SlashCommandBuilder } = require("discord.js")
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('spot')
-		.setDescription('invia uno spot alla pagina instagram @spotted_itismeucci')
+		.setName("spot")
+		.setDescription("invia uno spot alla pagina instagram @spotted_itismeucci")
 		.addStringOption((option) =>
 			option
-				.setName('testo')
-				.setDescription('il testo da inviare')
-				.setRequired(true)
+				.setName("testo")
+				.setDescription("il testo da inviare")
+				.setRequired(true),
 		),
 	async execute(interaction) {
-		let spottedText = interaction.options.getString('testo')
+		let spottedText = interaction.options.getString("testo")
 		spottedText +=
-			'\n[Spot inviato dal bot di discord del server di scuola (discord.gg/EhcYybM5CD)]'
+      "\n[Spot inviato dal bot di discord del server di scuola (discord.gg/EhcYybM5CD)]"
 		try {
-			const request = await fetch('https://api.tellonym.me/tells/new', {
-				method: 'POST',
+			const request = await fetch("https://api.tellonym.me/tells/new", {
+				method: "POST",
 				headers: {
-					'Content-Type': 'application/json',
+					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
 					isInstagramInAppBrowser: false,
@@ -30,15 +30,15 @@ module.exports = {
 				}),
 			})
 
-			if (request.statusText != 'OK')
-			{
-				throw new Error('La richiesta non è andata a buon fine')
+			if (request.statusText != "OK") {
+				throw new Error("La richiesta non è andata a buon fine")
 			}
-		} catch (error) {
+		}
+		catch (error) {
 			await interaction.reply({
 				embeds: [
 					{
-						title: `❌ Si è verificato un errore nell\'invio dello spot`,
+						title: `❌ Si è verificato un errore nell'invio dello spot`,
 						description: `${error}`,
 						color: 15548997,
 					},

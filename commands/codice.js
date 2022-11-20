@@ -1,18 +1,18 @@
-const { SlashCommandBuilder } = require('discord.js')
-const client = require('../index.js').client
+const { SlashCommandBuilder } = require("discord.js")
+const client = require("../index.js").client
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('codice')
-		.setDescription('mostra il codice del comando selezionato')
+		.setName("codice")
+		.setDescription("mostra il codice del comando selezionato")
 		.addStringOption((option) =>
 			option
-				.setName('comando')
-				.setDescription('il comando da visualizzare')
-				.setRequired(true)
+				.setName("comando")
+				.setDescription("il comando da visualizzare")
+				.setRequired(true),
 		),
 	async execute(interaction) {
-		let command = client.commands.get(interaction.options.getString('comando'))
+		const command = client.commands.get(interaction.options.getString("comando"))
 		if (!command) {
 			await interaction.reply({
 				embeds: [
@@ -28,7 +28,7 @@ module.exports = {
 		}
 
 		await interaction.reply(
-			`**Comando:** ${command.data.name}\n**Descrizione:** ${command.data.description}\n\`\`\`js\n${command.execute}\n\`\`\``
+			`**Comando:** ${command.data.name}\n**Descrizione:** ${command.data.description}\n\`\`\`js\n${command.execute}\n\`\`\``,
 		)
 	},
 }
