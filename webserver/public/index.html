@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-signin-client_id"
+        content="857601662119-tprnq5hrou1berebnv3ecpgelt0sa0gt.apps.googleusercontent.com">
+    <title>Verifica ITIS Meucci</title>
+</head>
+
+<body>
+    <h1>Verifica</h1>
+    <div id="login-panel">
+        <form>
+            <div id="g_id_onload"
+                data-client_id="857601662119-tprnq5hrou1berebnv3ecpgelt0sa0gt.apps.googleusercontent.com"
+                data-context="signin" data-ux_mode="popup" data-callback="sendCredentials" data-auto_prompt="false">
+            </div>
+
+            <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_black"
+                data-text="signin_with" data-size="large" data-locale="it" data-logo_alignment="left">
+            </div>
+        </form>
+    </div>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        function sendCredentials(data) {
+            fetch('http://localhost:6969/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(r => r.json()).then(data => console.log(data))
+        }
+    </script>
+</body>
+
+</html>
