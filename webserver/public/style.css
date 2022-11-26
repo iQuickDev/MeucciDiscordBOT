@@ -1,0 +1,111 @@
+body {
+	margin: 0;
+	padding: 0;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.main-container {
+	width: 50%;
+	height: 40%;
+}
+
+#info {
+	white-space: pre-wrap;
+	/* css-3 */
+	white-space: -moz-pre-wrap;
+	/* Mozilla, since 1999 */
+	white-space: -pre-wrap;
+	/* Opera 4-6 */
+	white-space: -o-pre-wrap;
+	/* Opera 7 */
+	word-wrap: break-word;
+	/* Internet Explorer 5.5+ */
+}
+
+#login-panel {
+	margin: 0 auto;
+    transform: scale(1.1);
+}
+
+#main {
+	position: absolute;
+	top: 50%;
+	right: 50%;
+	transform: translate(50%, -50%);
+	width: 25%;
+}
+
+#discord {
+	width: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+button:active {
+	border-style: outset;
+}
+
+#discord-login-button {
+	margin: auto;
+	width: max-content;
+	height: 40px;
+	border-radius: 50px;
+	background: #fff;
+	border-color: #999;
+	border-width: 1px;
+	outline: none;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+}
+
+#discord-login-button * {
+	padding: 5px;
+}
+
+#discord-logo {
+	vertical-align: middle;
+	margin: left;
+}
+
+.egg {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	color: transparent;
+	user-select: none;
+}
+
+.egg:hover {
+	color: black;
+}
+
+#logo {
+	width: 125px;
+	height: 125px;
+	filter: drop-shadow(0 0 1px #000);
+}
+
+@media only screen and (max-width: 1646px) {
+	#main {
+		width: 35%;
+	}
+}
+
+@media only screen and (max-width: 1155px) {
+	#main {
+		width: 40%;
+	}
+}
+
+@media only screen and (max-width: 912px) {
+	#main {
+		width: 70%;
+	}
+}

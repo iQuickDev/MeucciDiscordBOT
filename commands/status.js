@@ -1,30 +1,21 @@
-const { SlashCommandBuilder, version, EmbedBuilder } = require("discord.js")
-const client = require("../index.js").client
-const moment = require("moment")
-require("moment-duration-format")
-const os = require("os")
+const { SlashCommandBuilder, version, EmbedBuilder } = require('discord.js')
+const client = require('../index.js').client
+const moment = require('moment')
+require('moment-duration-format')
+const os = require('os')
 
 module.exports = {
-	data: new SlashCommandBuilder()
-		.setName("status")
-		.setDescription("mostra le risorse utilizzate dal bot"),
+	data: new SlashCommandBuilder().setName('status').setDescription('mostra le risorse utilizzate dal bot'),
 	async execute(interaction) {
 		await interaction.deferReply({
-			ephemeral: false,
+			ephemeral: false
 		})
 
-		const duration1 = moment
-			.duration(interaction.client.uptime)
-			.format(" d [days], h [hrs], m [mins], s [secs]")
+		const duration1 = moment.duration(interaction.client.uptime).format(' d [days], h [hrs], m [mins], s [secs]')
 		const guildsCounts = await client.guilds.fetch()
-		const userCounts = client.guilds.cache.reduce(
-			(acc, guild) => acc + guild.memberCount,
-			0,
-		)
+		const userCounts = client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)
 
-		const embed = new EmbedBuilder()
-			.setColor("Blue")
-			.setThumbnail(interaction.client.user.displayAvatarURL())
+		const embed = new EmbedBuilder().setColor('Blue').setThumbnail(interaction.client.user.displayAvatarURL())
 			.setDescription(`**ITIS Meucci BOT**
 			> **----- STATS -----**
             > **Server** : ${guildsCounts.size}
@@ -40,17 +31,9 @@ module.exports = {
         	> **----- MEMORIA -----**
             > **Totale** : ${(os.totalmem() / 1024 / 1024).toFixed(0)} MB
             > **Libera** : ${(os.freemem() / 1024 / 1024).toFixed(0)} MB
-            > **Totale heap** : ${(
-		process.memoryUsage().heapTotal /
-              1024 /
-              1024
-	).toFixed(0)} MB
-            > **Utilizzo heap** : ${(
-		process.memoryUsage().heapUsed /
-              1024 /
-              1024
-	).toFixed(0)} MB
+            > **Totale heap** : ${(process.memoryUsage().heapTotal / 1024 / 1024).toFixed(0)} MB
+            > **Utilizzo heap** : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(0)} MB
                   `)
 		interaction.followUp({ embeds: [embed] })
-	},
+	}
 }

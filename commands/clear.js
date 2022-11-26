@@ -1,14 +1,11 @@
-const { SlashCommandBuilder, PermissionsBitField } = require("discord.js")
+const { SlashCommandBuilder, PermissionsBitField } = require('discord.js')
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("clear")
-		.setDescription("pulisci la chat")
+		.setName('clear')
+		.setDescription('pulisci la chat')
 		.addIntegerOption((option) =>
-			option
-				.setName('quantità')
-				.setDescription("la quantità di messaggi da rimuovere")
-				.setRequired(true),
+			option.setName('quantità').setDescription('la quantità di messaggi da rimuovere').setRequired(true)
 		),
 	async execute(interaction) {
 		const quantity = interaction.options.getInteger('quantità')
@@ -20,25 +17,23 @@ module.exports = {
 					{
 						title: `❌ Si è verificato un errore`,
 						description: `Non hai i permessi necessari`,
-						color: 15548997,
-					},
+						color: 15548997
+					}
 				],
-				ephemeral: true,
+				ephemeral: true
 			})
 			return
 		}
 
 		channel.bulkDelete(quantity)
 
-		await interaction.reply(
-			{
-				embeds: [
-					{
-						title: `✅ Chat pulita`,
-						color: 5763719,
-					},
-				],
-			},
-		)
-	},
+		await interaction.reply({
+			embeds: [
+				{
+					title: `✅ Chat pulita`,
+					color: 5763719
+				}
+			]
+		})
+	}
 }
