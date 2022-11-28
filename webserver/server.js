@@ -45,7 +45,7 @@ module.exports = class VerificationServer {
 			try {
 				const discordCode = req.body.discordCode
 				const googleToken = jwt.verify(req.body.googleToken, process.env.jwtSecret)
-				const name = googleToken.name.replace(/(^\w|\s\w)/g, (m) => m.toUpperCase())
+				const name = googleToken.name.split(" ").map(w => w[0].toUpperCase() + w.substring(1, w.length)).join(" ")
 				const schoolClass = googleToken.class
 
 				const oauthData = await (
