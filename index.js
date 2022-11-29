@@ -3,6 +3,7 @@ const path = require('path')
 const dotenv = require('dotenv')
 const fs = require('fs')
 const VerificationServer = require('./webserver/server.js')
+const Scheduler = require('./scheduler.js')
 dotenv.config()
 
 const client = new Client({
@@ -58,3 +59,4 @@ client.on(Events.InteractionCreate, async (interaction) => {
 client.login(process.env.discordSecret)
 
 new VerificationServer(client)
+new Scheduler(client)

@@ -81,18 +81,17 @@ module.exports = class VerificationServer {
 					body: JSON.stringify({ access_token: oauthData.access_token })
 				})
 
-				let guild = await this.client.guilds.fetch('1042453384009101483')
-				let member = await guild.members.fetch(user.id)
-				let classRole = await guild.roles.cache.find((r) => r.name == schoolClass)
-				let verifiedRole = await guild.roles.cache.find((r) => r.id == '1043205166431752223')
-				await member.setNickname(`${name} (${schoolClass})`)
+				const guild = await this.client.guilds.fetch('1042453384009101483')
+				const member = await guild.members.fetch(user.id)
+				const classRole = await guild.roles.cache.find((r) => r.name == schoolClass)
+				const verifiedRole = await guild.roles.cache.find((r) => r.id == '1043205166431752223')
 				await member.roles.add(classRole)
 				await member.roles.add(verifiedRole)
+				await member.setNickname(`${name} (${schoolClass})`)
 			} catch (error) {
 				console.error(error)
 				res.code(403).send(error)
 			}
-
 			res.code(200)
 		})
 
