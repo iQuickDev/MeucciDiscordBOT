@@ -2,7 +2,6 @@ const fastify = require('fastify')()
 const path = require('path')
 const jwt = require('jsonwebtoken')
 const list = require('../storage/list.json')
-const fs = require('fs')
 
 module.exports = class VerificationServer {
 	server
@@ -45,7 +44,7 @@ module.exports = class VerificationServer {
 			try {
 				const discordCode = req.body.discordCode
 				const googleToken = jwt.verify(req.body.googleToken, process.env.jwtSecret)
-				const name = googleToken.name.split(" ").map(w => w[0].toUpperCase() + w.substring(1, w.length)).join(" ")
+				const name = googleToken.name.split(" ").map(w => w[0].toUpperCase() + w.substring(1, w.length).toLowerCase()).join(" ")
 				const schoolClass = googleToken.class
 
 				const oauthData = await (
@@ -83,13 +82,14 @@ module.exports = class VerificationServer {
 				})
 
 				let guild = await this.client.guilds.fetch('1042453384009101483')
-				let member = await guild.members.cache.find((m) => m.id == user.id)
+				let member = await guild.members.fetch(user.id)
 				let classRole = await guild.roles.cache.find((r) => r.name == schoolClass)
 				let verifiedRole = await guild.roles.cache.find((r) => r.id == '1043205166431752223')
 				await member.setNickname(`${name} (${schoolClass})`)
 				await member.roles.add(classRole)
 				await member.roles.add(verifiedRole)
 			} catch (error) {
+				console.error(error)
 				res.code(403).send(error)
 			}
 
