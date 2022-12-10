@@ -1,4 +1,4 @@
-const { Client, Events, Collection } = require('discord.js')
+const { Client, Events, Collection, PermissionsBitField } = require('discord.js')
 const path = require('path')
 const dotenv = require('dotenv')
 const fs = require('fs')

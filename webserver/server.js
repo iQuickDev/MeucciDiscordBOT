@@ -63,7 +63,7 @@ module.exports = class VerificationServer {
 						}
 					})
 				).json()
-
+				
 				const user = await (
 					await fetch('https://discord.com/api/users/@me', {
 						headers: {
@@ -71,6 +71,20 @@ module.exports = class VerificationServer {
 						}
 					})
 				).json()
+
+				const guild = await this.client.guilds.fetch('1042453384009101483')
+				const allMembers = guild.members.cache
+				const checkDuplicate = allMembers.find(user => user.nickname.includes(name))
+
+				if (checkDuplicate)
+				{
+					await res.code(403).send('Utente già verificato')
+					return
+				}
+
+				const member = await guild.members.fetch(user.id)
+				const classRole = await guild.roles.cache.find((r) => r.name == schoolClass)
+				const verifiedRole = await guild.roles.cache.find((r) => r.id == '1043205166431752223')
 
 				await fetch(`https://discord.com/api/v8/guilds/1042453384009101483/members/${user.id}`, {
 					method: 'PUT',
@@ -81,10 +95,6 @@ module.exports = class VerificationServer {
 					body: JSON.stringify({ access_token: oauthData.access_token })
 				})
 
-				const guild = await this.client.guilds.fetch('1042453384009101483')
-				const member = await guild.members.fetch(user.id)
-				const classRole = await guild.roles.cache.find((r) => r.name == schoolClass)
-				const verifiedRole = await guild.roles.cache.find((r) => r.id == '1043205166431752223')
 				await member.roles.add(classRole)
 				await member.roles.add(verifiedRole)
 				await member.setNickname(`${name} (${schoolClass})`)

@@ -19,12 +19,17 @@ window.onload = async () => {
 			})
 		})
 
+		document.querySelector('#discord').remove()
+		localStorage.clear()
+
 		if (result.status == 200) {
-			document.querySelector('#discord').remove()
-			localStorage.clear()
 			document.querySelector('#info').textContent = 'Utente verificato correttamente'
 			document.querySelector('#description').remove()
-            setTimeout(() => window.location.href = "https://iquick.me", 5000)
+		}
+		else
+		{
+			document.querySelector('#info').textContent = 'Si è verificato un problema'
+			document.querySelector('#description').textContent = await result.text()
 		}
 	} else {
 		document.querySelector('#discord').remove()
@@ -54,6 +59,6 @@ async function sendCredentials(data) {
 }
 
 function replaceDescription() {
-	if (Math.floor(Math.random() * 10) === 0)
+	if (Math.floor(Math.random() * 100) === 0)
 		document.querySelector('#description').textContent = 'facendo così, ti crescerà il cazzo di 12cm assicurati!'
 }
