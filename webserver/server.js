@@ -72,15 +72,22 @@ module.exports = class VerificationServer {
 					})
 				).json()
 
+				let checkDuplicate = false
 				const guild = await this.client.guilds.fetch('1042453384009101483')
-				const allMembers = guild.members.cache
-				const checkDuplicate = allMembers.find(user => user.nickname.includes(name))
+				guild.members.cache.forEach(user => {
+					if (user.nickname)
+					{
+						if (user.nickname.includes(name))
+						{
+							checkDuplicate = true
+							res.code(403).send('Utente già verificato')
+							return
+						}
+					}
+				})
 
 				if (checkDuplicate)
-				{
-					await res.code(403).send('Utente già verificato')
 					return
-				}
 
 				const member = await guild.members.fetch(user.id)
 				const classRole = await guild.roles.cache.find((r) => r.name == schoolClass)
