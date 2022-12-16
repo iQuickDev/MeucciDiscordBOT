@@ -13,17 +13,29 @@ const client = new Client({
 module.exports.client = client
 client.commands = new Collection()
 const commandsPath = path.join(__dirname, 'commands')
-const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith('.js'))
+const commands = fs.readdirSync(commandsPath).filter((file) => file.endsWith('.js'))
 
-for (const file of commandFiles) {
+// load all modules
+for (const file of commands) {
 	const filePath = path.join(commandsPath, file)
 	const command = require(filePath)
 	if ('data' in command && 'execute' in command) {
 		client.commands.set(command.data.name, command)
-		console.log(`[LOADED] ${file}`)
+		console.log(`[LOADED - COMMAND] ${file}`)
 	} else {
 		console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property`)
 	}
+}
+
+const eventsPath = path.join(__dirname, 'events')
+const events = fs.readdirSync(eventsPath).filter((file) => file.endsWith('.js'))
+
+// load all events
+for (const file of events)
+{
+	const eventPath = path.join(eventsPath, file)
+	require(eventPath)
+	console.log(`[LOADED - EVENT] ${file}`)
 }
 
 client.once(Events.ClientReady, () => {
