@@ -1,6 +1,14 @@
-const appData = {
+let appData = {
 	guildID: '1042453384009101483',
-	clientID: '1042527020317413407'
+	clientID: '1052681910071074837'
+}
+
+if (!process.env.TEST) {
+	appData.clientID = '1042527020317413407'
+
+	console.log('Starting bot in normal mode...')
+} else {
+	console.log('Starting bot in testing mode...')
 }
 
 const dotenv = require('dotenv')
@@ -20,7 +28,7 @@ for (const file of commandFiles) {
 }
 
 // Construct and prepare an instance of the REST module
-const rest = new REST({ version: '10' }).setToken(process.env.secret)
+const rest = new REST({ version: '10' }).setToken(process.env.discordSecret)
 
 // and deploy your commands!
 ;(async () => {

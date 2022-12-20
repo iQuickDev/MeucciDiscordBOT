@@ -4,16 +4,18 @@ const countingChannelID = "1053039207855177739"
 
 let count = 0
 
-client.on('messageCreate', ({ channel, content, member }) => {
+client.on('messageCreate', (message) => {
+
+	const { channel, content, member } = message
+
 	if (channel.id === countingChannelID) {
 		if (member.user.bot) return
 
 		count++
 
 		if (Number(content) !== count) {
-			channel.send(
-				`${member} ha sbagliato a contare, evidentemente gli piace il cazzo.\nContatore resettato da ${count-1} a 0.`
-			)
+			
+			message.delete()
 
 			console.error(`[Counting channel] ${member} ha sbagliato a contare, il contatore era a ${count-1}`)
 
