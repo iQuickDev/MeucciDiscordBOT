@@ -18,8 +18,6 @@ client.on('messageCreate', (message) => {
 			message.delete()
 
 			console.error(`[Counting channel] ${member} ha sbagliato a contare, il contatore era a ${count-1}`)
-
-			count = 0
 		}
 	}
 })
