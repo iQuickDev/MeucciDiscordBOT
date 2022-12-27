@@ -3,6 +3,12 @@ let appData = {
 	clientID: '1052681910071074837'
 }
 
+const dotenv = require('dotenv')
+const { REST, Routes } = require('discord.js')
+const fs = require('node:fs')
+const { guildID, clientID } = appData
+dotenv.config()
+
 if (!process.env.TEST) {
 	appData.clientID = '1042527020317413407'
 
@@ -10,12 +16,6 @@ if (!process.env.TEST) {
 } else {
 	console.log('Starting bot in testing mode...')
 }
-
-const dotenv = require('dotenv')
-const { REST, Routes } = require('discord.js')
-const fs = require('node:fs')
-const { guildID, clientID } = appData
-dotenv.config()
 
 const commands = []
 // Grab all the command files from the commands directory you created earlier

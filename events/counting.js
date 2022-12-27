@@ -13,8 +13,6 @@ client.on('messageCreate', (message) => {
 
 		if (Number(content) !== count) {
 			message.delete()
-
-			console.error(`[Counting channel] ${member.displayName} ha sbagliato a contare, il contatore era a ${count - 1}, offending message "${message.content}"`)
 		} else count++
 	}
 })

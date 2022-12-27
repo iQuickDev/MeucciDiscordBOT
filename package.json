@@ -16,6 +16,7 @@
 		"moment": "^2.29.4",
 		"moment-duration-format": "^2.3.2",
 		"node-schedule": "^2.1.0",
+		"selenium-webdriver": "^4.7.1",
 		"socket-io": "^1.0.0"
 	}
 }

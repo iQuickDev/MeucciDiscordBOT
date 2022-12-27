@@ -5,7 +5,6 @@ window.onload = async () => {
 		const code = new URLSearchParams(window.location.search).get('code')
 
 		if (!code) {
-			console.log('no code... RETURNING')
 			return
 		}
 

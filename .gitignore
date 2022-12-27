@@ -105,3 +105,6 @@ dist
 
 # certificates
 TLS
+
+# browser data
+browser-data
