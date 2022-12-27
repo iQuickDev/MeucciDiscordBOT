@@ -6,7 +6,6 @@ let appData = {
 const dotenv = require('dotenv')
 const { REST, Routes } = require('discord.js')
 const fs = require('node:fs')
-const { guildID, clientID } = appData
 dotenv.config()
 
 if (!process.env.TEST) {
@@ -17,6 +16,7 @@ if (!process.env.TEST) {
 	console.log('Starting bot in testing mode...')
 }
 
+const { guildID, clientID } = appData
 const commands = []
 // Grab all the command files from the commands directory you created earlier
 const commandFiles = fs.readdirSync('./commands').filter((file) => file.endsWith('.js'))
