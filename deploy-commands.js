@@ -11,9 +11,9 @@ dotenv.config()
 if (!process.env.TEST) {
 	appData.clientID = '1042527020317413407'
 
-	console.log('Starting bot in normal mode...')
+	console.log('Deploying commands in normal mode...')
 } else {
-	console.log('Starting bot in testing mode...')
+	console.log('Deploying commands in testing mode...')
 }
 
 const { guildID, clientID } = appData
