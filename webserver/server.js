@@ -1,17 +1,19 @@
 const fastify = require('fastify')()
 const path = require('path')
 const jwt = require('jsonwebtoken')
-const list = require('../storage/list.json')
+const sqlite = require('better-sqlite3')
 
 module.exports = class VerificationServer {
 	server
 	port
 	client
 	options
+	db
 
 	constructor(client) {
 		this.client = client
 		this.port = 80
+		this.db = sqlite(`${__dirname}/../storage/db.sqlite`)
 
 		fastify.post('/api/login/google', async (req, res) => {
 			const credential = jwt.decode(req.body.credential)
@@ -20,19 +22,27 @@ module.exports = class VerificationServer {
 				return
 			}
 
-			for (const className of Object.entries(list)) {
-				if (Object.values(className)[1].find((e) => e == credential.email)) {
-					let guild = await this.client.guilds.fetch('1042453384009101483')
-					let role = guild.roles.cache.find((r) => r.name == Object.values(className)[0])
-					let token = jwt.sign(
-						{
-							name: credential.name,
-							class: role.name
-						},
-						process.env.jwtSecret
-					)
-					res.send({ token })
-				}
+			const foundStudent = this.db
+				.prepare(
+					`
+			SELECT st.email AS "email", se.name AS "section"
+			FROM students st INNER JOIN sections se ON (st.section = se.id)
+			WHERE st.email = ?
+			`
+				)
+				.get(credential.email)
+
+			if (foundStudent) {
+				let guild = await this.client.guilds.fetch('1042453384009101483')
+				let role = guild.roles.cache.find((r) => r.name == foundStudent.section)
+				let token = jwt.sign(
+					{
+						name: credential.name,
+						class: role.name
+					},
+					process.env.jwtSecret
+				)
+				res.send({ token })
 			}
 
 			res.send()
@@ -44,7 +54,10 @@ module.exports = class VerificationServer {
 			try {
 				const discordCode = req.body.discordCode
 				const googleToken = jwt.verify(req.body.googleToken, process.env.jwtSecret)
-				const name = googleToken.name.split(" ").map(w => w[0].toUpperCase() + w.substring(1, w.length).toLowerCase()).join(" ")
+				const name = googleToken.name
+					.split(' ')
+					.map((w) => w[0].toUpperCase() + w.substring(1, w.length).toLowerCase())
+					.join(' ')
 				const schoolClass = googleToken.class
 
 				const oauthData = await (
@@ -63,7 +76,7 @@ module.exports = class VerificationServer {
 						}
 					})
 				).json()
-				
+
 				const user = await (
 					await fetch('https://discord.com/api/users/@me', {
 						headers: {
@@ -74,11 +87,9 @@ module.exports = class VerificationServer {
 
 				let checkDuplicate = false
 				const guild = await this.client.guilds.fetch('1042453384009101483')
-				guild.members.cache.forEach(user => {
-					if (user.nickname)
-					{
-						if (user.nickname.includes(name))
-						{
+				guild.members.cache.forEach((user) => {
+					if (user.nickname) {
+						if (user.nickname.includes(name)) {
 							checkDuplicate = true
 							res.code(403).send('Utente già verificato')
 							return
@@ -86,8 +97,7 @@ module.exports = class VerificationServer {
 					}
 				})
 
-				if (checkDuplicate)
-					return
+				if (checkDuplicate) return
 
 				const member = await guild.members.fetch(user.id)
 				const classRole = await guild.roles.cache.find((r) => r.name == schoolClass)

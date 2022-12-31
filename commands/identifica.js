@@ -1,13 +1,12 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js')
-const list = require('../storage/list.json')
-const { client } = require('../index.js')
 const sqlite = require('better-sqlite3')
 
 function capitalizeFirstLetters(string) {
-	return string.split(' ')
-	.map(x => x[0].toUpperCase() + x.substring(1, x.length).toLowerCase())
-	.toString()
-	.replaceAll(',', ' ')
+	return string
+		.split(' ')
+		.map((x) => x[0].toUpperCase() + x.substring(1, x.length).toLowerCase())
+		.toString()
+		.replaceAll(',', ' ')
 }
 
 module.exports = {
@@ -17,8 +16,23 @@ module.exports = {
 		.addStringOption((option) => option.setName('soggetto').setDescription('il nome o cognome dello studente'))
 		.addStringOption((option) => option.setName('classe').setDescription('la classe dello studente')),
 	async execute(interaction) {
-		const requestedName = interaction.options.getString('soggetto') ?? ""
-		const requestedSection = interaction.options.getString('classe') ?? ""
+		const requestedName = interaction.options.getString('soggetto') ?? ''
+		const requestedSection = interaction.options.getString('classe') ?? ''
+
+		if (!requestedName && !requestedSection)
+		{
+			await interaction.reply({
+				embeds: [
+					{
+						title: `❌ Si è verificato un errore`,
+						description: `Non è stato fornito nessun parametro di ricerca`,
+						color: 15548997
+					}
+				],
+				ephemeral: true
+			})
+			return
+		}
 
 		await interaction.deferReply()
 

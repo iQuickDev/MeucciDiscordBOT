@@ -31,8 +31,7 @@ const eventsPath = path.join(__dirname, 'events')
 const events = fs.readdirSync(eventsPath).filter((file) => file.endsWith('.js'))
 
 // load all events
-for (const file of events)
-{
+for (const file of events) {
 	const eventPath = path.join(eventsPath, file)
 	require(eventPath)
 	console.log(`[LOADED - EVENT] ${file}`)

@@ -25,9 +25,7 @@ window.onload = async () => {
 		if (result.status == 200) {
 			document.querySelector('#info').textContent = 'Utente verificato correttamente'
 			document.querySelector('#description').remove()
-		}
-		else
-		{
+		} else {
 			document.querySelector('#info').textContent = 'Si è verificato un problema'
 			document.querySelector('#description').textContent = await result.text()
 		}
@@ -38,21 +36,20 @@ window.onload = async () => {
 
 async function sendCredentials(data) {
 	const req = await fetch('https://discord.meucci.party/api/login/google', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(data)
-		})
-    
-    if (req.status != 200)
-    {
-        document.querySelector('#info').textContent = 'Si è verificato un errore'
-        document.querySelector('#description').remove()
-        setTimeout(() => window.location.reload(), 5000)
-        return
-    }
-    const googleToken = await req.json()
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(data)
+	})
+
+	if (req.status != 200) {
+		document.querySelector('#info').textContent = 'Si è verificato un errore'
+		document.querySelector('#description').remove()
+		setTimeout(() => window.location.reload(), 5000)
+		return
+	}
+	const googleToken = await req.json()
 
 	localStorage.setItem('googleToken', googleToken.token)
 	window.location.reload()

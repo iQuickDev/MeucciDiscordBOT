@@ -1,5 +1,3 @@
-'use strict'
-
 const { client } = require('../index.js')
 const { EmbedBuilder } = require('discord.js')
 const { getAverageColor } = require('fast-average-color-node')
@@ -11,7 +9,6 @@ const thumbnailStorage = path.resolve(__dirname, '../thumbnails')
 if (!fs.existsSync(thumbnailStorage)) {
 	fs.mkdirSync(thumbnailStorage)
 }
-console.log('[STARBOARD] Thumbnail storage point set to ' + thumbnailStorage)
 
 const allowedChannelIDs = ['1052681467706212502']
 const necessaryStars = 1
@@ -21,7 +18,6 @@ const loadLimit = 100
 async function loadMessages(channelID, limit) {
 	const channel = client.channels.cache.get(channelID)
 	const messages = await channel.messages.fetch({ limit: limit })
-	console.log(`[STARBOARD] Fetched ${messages.size} messages from ${channel.name}`)
 }
 
 client.on('ready', () => {
@@ -43,11 +39,7 @@ async function editEmbedStarCount(message, stars, retries = 3) {
 		await message.edit({ embeds: [newEmbed] })
 	} catch (err) {
 		console.error(err)
-		console.error(
-			`[STARBOARD] Failed to edit embed star count for message ${message.id}, retrying ${retries} more times...`
-		)
 		if (retries <= 0) {
-			console.error(`[STARBOARD] Failed to edit embed star count for message ${message.id}, giving up.`)
 			return Promise.reject(finalErr)
 		}
 		return editEmbedStarCount(message, stars, retries - 1)
@@ -87,7 +79,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
 		if (reaction.count < necessaryStars) return
 		if (message.author.id === user.id) {
 			reaction.remove(user.id)
-			ephemerallyDMUser('Non puoi aggiungere una stella ad un tuo messaggio.', user, 300000)
+			ephemerallyDMUser('Non puoi aggiungere una stella ad un tuo messaggio', user, 300000)
 			return
 		}
 		if (message.author.bot) {
@@ -99,10 +91,6 @@ client.on('messageReactionAdd', async (reaction, user) => {
 			)
 			return
 		}
-
-		console.log(
-			`[STARBOARD] Necessary stars reached (stars at ${reaction.count}), forwarding or editing message: "${message}"`
-		)
 
 		let embedMsgId
 		if (
@@ -117,14 +105,10 @@ client.on('messageReactionAdd', async (reaction, user) => {
 				return detectedID === message.id
 			})
 		) {
-			console.log(`[STARBOARD] Message already in starboard, editing...`)
-
 			const message = await channel.messages.fetch(embedMsgId)
 
 			await editEmbedStarCount(message, reaction.count)
 		} else {
-			console.log(`[STARBOARD] Message not in starboard, forwarding...`)
-
 			// Prep media
 			const media = message.attachments.size > 0 ? message.attachments.first() : null
 			let isVideoAttached = false
@@ -196,12 +180,8 @@ client.on('messageReactionRemove', async (reaction, user) => {
 		const starboardMessage = await channel.messages.fetch(embedMsg.id)
 
 		if (reaction.count < necessaryStars) {
-			console.log(`[STARBOARD] Message no longer has necessary stars, deleting message...`)
-
 			await starboardMessage.delete()
 		} else {
-			console.log(`[STARBOARD] Necessary stars still reached, editing message...`)
-
 			await editEmbedStarCount(starboardMessage, reaction.count)
 		}
 	} catch (err) {
