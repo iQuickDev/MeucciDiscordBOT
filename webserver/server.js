@@ -1,4 +1,12 @@
-const fastify = require('fastify')()
+const fs = require('fs')
+const fastify = require('fastify')({
+	https: {
+		allowHTTP1: true,
+		key: fs.readFileSync('/etc/letsencrypt/live/discord.meucci.party/privkey.pem'),
+		cert: fs.readFileSync('/etc/letsencrypt/live/discord.meucci.party/cert.pem')
+	}
+})
+
 const path = require('path')
 const jwt = require('jsonwebtoken')
 const sqlite = require('better-sqlite3')
@@ -12,7 +20,7 @@ module.exports = class VerificationServer {
 
 	constructor(client) {
 		this.client = client
-		this.port = 80
+		this.port = 443
 		this.db = sqlite(`${__dirname}/../storage/db.sqlite`)
 
 		fastify.post('/api/login/google', async (req, res) => {
