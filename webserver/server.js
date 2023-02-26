@@ -1,11 +1,16 @@
 const fs = require('fs')
-const fastify = require('fastify')({
-	https: {
-		allowHTTP1: true,
-		key: fs.readFileSync('/etc/letsencrypt/live/discord.meucci.party/privkey.pem'),
-		cert: fs.readFileSync('/etc/letsencrypt/live/discord.meucci.party/cert.pem')
-	}
-})
+let fastify
+if (process.env.NODE_ENV === 'production') {
+	fastify = require('fastify')({
+		https: {
+			allowHTTP1: true,
+			key: fs.readFileSync('/etc/letsencrypt/live/discord.meucci.party/privkey.pem'),
+			cert: fs.readFileSync('/etc/letsencrypt/live/discord.meucci.party/cert.pem')
+		}
+	})
+} else {
+	fastify = require('fastify')()
+}
 
 const path = require('path')
 const jwt = require('jsonwebtoken')
