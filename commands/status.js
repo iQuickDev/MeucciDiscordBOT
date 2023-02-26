@@ -5,7 +5,7 @@ require('moment-duration-format')
 const os = require('os')
 
 module.exports = {
-	data: new SlashCommandBuilder().setName('status').setDescription('mostra le risorse utilizzate dal bot'),
+	data: new SlashCommandBuilder().setName('status').setDescription('Mostra le risorse utilizzate dal bot'),
 	async execute(interaction) {
 		await interaction.deferReply({
 			ephemeral: false

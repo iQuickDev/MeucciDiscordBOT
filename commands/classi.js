@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require('discord.js')
 const client = require('../index.js').client
 
 module.exports = {
-	data: new SlashCommandBuilder().setName('classi').setDescription('mostra la lista delle classi'),
+	data: new SlashCommandBuilder().setName('classi').setDescription('Mostra la lista delle classi'),
 
 	async execute(interaction) {
 		const guild = await client.guilds.fetch(interaction.guild.id)

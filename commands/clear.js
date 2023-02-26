@@ -3,9 +3,9 @@ const { SlashCommandBuilder, PermissionsBitField } = require('discord.js')
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('clear')
-		.setDescription('pulisci la chat')
+		.setDescription('Pulisci la chat')
 		.addIntegerOption((option) =>
-			option.setName('quantità').setDescription('la quantità di messaggi da rimuovere').setRequired(true)
+			option.setName('quantità').setDescription('La quantità di messaggi da rimuovere').setRequired(true)
 		),
 	async execute(interaction) {
 		const quantity = interaction.options.getInteger('quantità')

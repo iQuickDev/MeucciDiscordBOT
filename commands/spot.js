@@ -3,8 +3,8 @@ const { SlashCommandBuilder } = require('discord.js')
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('spot')
-		.setDescription('invia uno spot alla pagina instagram @spotted_itismeucci')
-		.addStringOption((option) => option.setName('testo').setDescription('il testo da inviare').setRequired(true)),
+		.setDescription('Invia uno spot alla pagina instagram @spotted_itismeucci')
+		.addStringOption((option) => option.setName('testo').setDescription('Il testo da inviare').setRequired(true)),
 	async execute(interaction) {
 		let spottedText = interaction.options.getString('testo')
 		spottedText += '\n[Spot inviato dal bot di discord del server di scuola (discord.gg/EhcYybM5CD)]'

@@ -4,9 +4,9 @@ const client = require('../index.js').client
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('codice')
-		.setDescription('mostra il codice del comando selezionato')
+		.setDescription('Mostra il codice del comando selezionato')
 		.addStringOption((option) =>
-			option.setName('comando').setDescription('il comando da visualizzare').setRequired(true)
+			option.setName('comando').setDescription('Il comando da visualizzare').setRequired(true)
 		),
 	async execute(interaction) {
 		const command = client.commands.get(interaction.options.getString('comando'))

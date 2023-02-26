@@ -12,15 +12,14 @@ function capitalizeFirstLetters(string) {
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('identifica')
-		.setDescription('mostra informazioni riguardanti uno studente')
-		.addStringOption((option) => option.setName('soggetto').setDescription('il nome o cognome dello studente'))
-		.addStringOption((option) => option.setName('classe').setDescription('la classe dello studente')),
+		.setDescription('Mostra informazioni riguardanti uno studente')
+		.addStringOption((option) => option.setName('soggetto').setDescription('Il nome o cognome dello studente'))
+		.addStringOption((option) => option.setName('classe').setDescription('La classe dello studente')),
 	async execute(interaction) {
 		const requestedName = interaction.options.getString('soggetto') ?? ''
 		const requestedSection = interaction.options.getString('classe') ?? ''
 
-		if (!requestedName && !requestedSection)
-		{
+		if (!requestedName && !requestedSection) {
 			await interaction.reply({
 				embeds: [
 					{
@@ -39,9 +38,11 @@ module.exports = {
 		const db = sqlite(`${__dirname}/../storage/db.sqlite`)
 
 		const query = db.prepare(`
-		SELECT st.name AS "name", se.name AS "section"
-		FROM sections se JOIN students st ON (se.id = st.section)
-		WHERE st.name LIKE '%' || ? || '%' AND se.name LIKE '%' || ? || '%'
+            SELECT st.name AS "name", se.name AS "section"
+            FROM sections se
+                     JOIN students st ON (se.id = st.section)
+            WHERE st.name LIKE '%' || ? || '%'
+              AND se.name LIKE '%' || ? || '%'
 		`)
 
 		const foundStudents = query.all(requestedName, requestedSection)
@@ -54,7 +55,7 @@ module.exports = {
 			results += `${capitalizeFirstLetters(student.name)} (${student.section})\n`
 		}
 
-		if (foundStudents.length == 0) {
+		if (foundStudents.length === 0) {
 			results = 'Nessuno studente trovato'
 			embedColor = 'Red'
 		}
