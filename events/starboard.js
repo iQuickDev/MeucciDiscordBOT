@@ -7,10 +7,10 @@ const path = require('path')
 
 // Config options
 const thumbnailStorage = path.resolve(__dirname, '../thumbnails') // Where to store video thumbnails
-const allowedChannelIDs = ['1052681467706212502'] // The channel IDs that are allowed to heve messages forwarded to the starboard
-const necessaryStars = 1 // The amount of stars needed forward a message to the starboard
+const allowedChannelIDs = ['1052681467706212502'] // The channel IDs allowed having messages forwarded to the starboard
+const necessaryStars = 1 // The number of stars needed forward a message to the starboard
 const starboardChannelID = '1057418959672053811' // The channel ID of the starboard
-const loadLimit = 100 // The amount of messages to load from the starboard channel
+const loadLimit = 100 // The number of messages to load from the starboard channel
 
 // Thumbnail storage folder creation
 if (!fs.existsSync(thumbnailStorage)) {
@@ -20,22 +20,22 @@ if (!fs.existsSync(thumbnailStorage)) {
 // Shorthand to load messages (100 is the limit imposed by Discord's APIs)
 async function loadMessages(channelID, limit = 100) {
 	if (limit > 100) {
-		throw new Error("Channel loading limit cannot be greater than 100, as imposed by Discord's APIs")
+		throw new Error('The channel loading limit cannot be greater than 100, as imposed by Discord\'s APIs')
 	}
 	const channel = client.channels.cache.get(channelID)
-	const messages = await channel.messages.fetch({ limit: limit })
-	return messages
+	return await channel.messages.fetch({ limit: limit })
 }
 
 // Loads messages from the starboard channel because the messageReactionAdd and messageReactionRemove events don't work with uncached messages
-client.on('ready', () => {
-	loadMessages(starboardChannelID, loadLimit)
+client.on('ready', async () => {
+	await loadMessages(starboardChannelID, loadLimit)
 	for (const channelID of allowedChannelIDs) {
-		loadMessages(channelID, loadLimit)
+		await loadMessages(channelID, loadLimit)
 	}
 })
 
-// Given an message object containing an embed, edits the embed star count, if it fails, it'll retry 3 more times by default
+// Given a message object containing an embed, edits the embed star count.
+// If it fails, it'll retry 3 more times by default
 async function editEmbedStarCount(message, stars, retries = 3) {
 	try {
 		const oldEmbed = message.embeds[0]
@@ -70,12 +70,12 @@ async function ephemerallyDMUser(text, user, time = 300000) {
 
 // Given a rgb(r, g, b) string, returns an array with [r, g, b]
 function rgbStringToArray(rgbString) {
-	const rgbArray = rgbString
+	return rgbString
 		.replace('rgb(', '')
 		.replace(')', '')
 		.split(',')
 		.map((x) => parseInt(x))
-	return rgbArray
+
 }
 
 client.on('messageReactionAdd', async (reaction, user) => {
@@ -85,16 +85,16 @@ client.on('messageReactionAdd', async (reaction, user) => {
 
 		// First checks if we should ignore the reaction or not
 		if (reaction.emoji.name !== '⭐') return
-		if (!allowedChannelIDs.includes(message.channel.id)) return
+		if (!allowedChannelIDs.includes(message.channel.id.toString())) return
 		if (reaction.count < necessaryStars) return
 		if (message.author.id === user.id) {
-			reaction.remove(user.id)
-			ephemerallyDMUser('Non puoi aggiungere una stella ad un tuo messaggio', user)
+			await reaction.remove()
+			await ephemerallyDMUser('Non puoi aggiungere una stella a un tuo messaggio', user)
 			return
 		}
 		if (message.author.bot) {
-			reaction.remove(user.id)
-			ephemerallyDMUser(`Non puoi aggiungere una stella ad un messaggio di ${message.author.username}.`, user)
+			await reaction.remove()
+			await ephemerallyDMUser(`Non puoi aggiungere una stella a un messaggio di ${message.author.username}.`, user)
 			return
 		}
 
@@ -124,8 +124,8 @@ client.on('messageReactionAdd', async (reaction, user) => {
 			let image
 
 			if (media) {
-				isImageAttached = media.contentType.startsWith('image') ? true : false
-				isVideoAttached = media.contentType.startsWith('video') ? true : false
+				isImageAttached = media.contentType.startsWith('image')
+				isVideoAttached = media.contentType.startsWith('video')
 				if (isVideoAttached) {
 					// genThumbnail is an external library that uses ffmpeg
 					await genThumbnail(media.url, `${thumbnailStorage}/thumbnail.png`, '?x1080')
@@ -136,7 +136,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
 			}
 
 			// Prepare embed color
-			let color = [35, 39, 42] // Default embed color is Discord's grey
+			let color = [35, 39, 42] // The default embed color is Discord's grey
 			// Works if there is an image or a video attached
 			if (image) {
 				// getAverageColor is an external library we use to color the embed
@@ -161,8 +161,8 @@ client.on('messageReactionAdd', async (reaction, user) => {
 				.setTimestamp(message.createdAt)
 				.setFooter({ text: `⭐ ${reaction.count} | ${message.id}` })
 				.setURL(message.url)
-			
-			// If there is a media which isn't an image add it as an attachment else add an embed image
+
+			// If there is a media which isn't an image, add it as an attachment else add an embed image
 			if (media && !isImageAttached) {
 				await channel.send({ embeds: [embed], files: [media.url] })
 			} else {
@@ -175,14 +175,14 @@ client.on('messageReactionAdd', async (reaction, user) => {
 	}
 })
 
-client.on('messageReactionRemove', async (reaction, user) => {
+client.on('messageReactionRemove', async (reaction) => {
 	try {
 		const { message } = reaction
 		const channel = client.channels.cache.get(starboardChannelID)
 
 		// First checks if we should ignore the reaction or not
 		if (reaction.emoji.name !== '⭐') return
-		if (!allowedChannelIDs.includes(message.channel.id)) return
+		if (!allowedChannelIDs.includes(message.channel.id.toString())) return
 
 		const embedMsg = channel.messages.cache.find((msg) => {
 			const footer = msg.embeds[0].footer.text

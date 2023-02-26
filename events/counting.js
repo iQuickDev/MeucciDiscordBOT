@@ -15,14 +15,14 @@ client.on('ready', () => {
 	})
 })
 
-client.on('messageCreate', (message) => {
+client.on('messageCreate',async (message) => {
 	const { channel, content, member } = message
 
 	if (channel.id === countingChannelID) {
 		if (member.user.bot) return
 
 		if (Number(content) !== count) {
-			message.delete()
+			await message.delete()
 		} else count++
 	}
 })
