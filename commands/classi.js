@@ -6,7 +6,7 @@ module.exports = {
 
 	async execute(interaction) {
 		const guild = await client.guilds.fetch(interaction.guild.id)
-		const classes = guild.roles.cache.filter((r) => !isNaN(r.name[0])).sort()
+		const classes = guild.roles.cache.filter((r) => !isNaN(Number(r.name[0]))).sort()
 		let list = ''
 
 		classes.forEach((c) => (list += `${c.name}\n`))

@@ -34,6 +34,6 @@ module.exports = {
             > **Totale heap** : ${(process.memoryUsage().heapTotal / 1024 / 1024).toFixed(0)} MB
             > **Utilizzo heap** : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(0)} MB
                   `)
-		interaction.followUp({ embeds: [embed] })
+		await interaction.followUp({ embeds: [embed] })
 	}
 }

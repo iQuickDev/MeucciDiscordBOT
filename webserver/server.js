@@ -17,7 +17,6 @@ const jwt = require('jsonwebtoken')
 const sqlite = require('better-sqlite3')
 
 module.exports = class VerificationServer {
-	server
 	port
 	client
 	options
@@ -105,7 +104,6 @@ module.exports = class VerificationServer {
 						if (user.nickname.includes(name)) {
 							checkDuplicate = true
 							res.code(403).send('Utente già verificato')
-							return
 						}
 					}
 				})

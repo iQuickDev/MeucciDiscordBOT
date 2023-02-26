@@ -25,7 +25,7 @@ module.exports = {
 			return
 		}
 
-		channel.bulkDelete(quantity)
+		await channel.bulkDelete(quantity)
 
 		await interaction.reply({
 			embeds: [

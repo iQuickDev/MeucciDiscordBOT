@@ -18,13 +18,13 @@ const settings = require('./settings.json')
 	options.addArguments(`user-data-dir=${__dirname}/browser-data`)
 	let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build()
 
-	driver.manage().setTimeouts({
+	await driver.manage().setTimeouts({
 		implicit: TIMEOUT,
 		pageLoad: TIMEOUT,
 		script: TIMEOUT
 	})
 
-	// go to the schedules page and scrape the sections
+	// Go to the 'schedule' page and scrape the sections
 
 	driver.get(settings.scheduleLink)
 	let columns = await driver.findElements({ tagName: 'p' })
@@ -36,7 +36,7 @@ const settings = require('./settings.json')
 			continue
 		}
 
-		// sorry for this but it is made to fix mistakes made by the school
+		// Sorry for this, but it is made to fix mistakes made by the school
 
 		if (!s.includes('-')) {
 			let currentSection = `${s.substring(0, 2)}-${s.substring(2, s.length)}`
@@ -51,7 +51,7 @@ const settings = require('./settings.json')
 	console.log(sections)
 
 	const databaseFile = path.resolve(__dirname + '/db.sqlite')
-	// delete the existing db (if it exists) and proceed to create a new one
+	// Delete the existing db (if it exists) and proceed to create a new one
 
 	try {
 		fs.unlinkSync(databaseFile)
@@ -89,7 +89,7 @@ const settings = require('./settings.json')
 	for (const section of sections) {
 		driver.get(`https://groups.google.com/u/1/a/itismeucci.com/g/studenti.${section.replace('-', '')}/members`)
 
-		// need to change classnames when they rebuild google groups
+		// Need to change classnames when they rebuild Google Groups
 		let emails = await driver.findElements({ className: 'p480bb Sq3iG' })
 		let names = await driver.findElements({ className: 'LnLepd' })
 
@@ -108,7 +108,7 @@ const settings = require('./settings.json')
 		console.log(`Retrieved ${section} with ${emails.length} entries`)
 	}
 
-	// fix users with email instead of name in name field
+	// Fix users with email instead of name in name field
 	console.log(
 		'Fixed ' +
 			db
