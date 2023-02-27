@@ -7,7 +7,7 @@ const path = require('path')
 
 // Config options
 const thumbnailStorage = path.resolve(__dirname, '../thumbnails') // Where to store video thumbnails
-const allowedChannelIDs = ['1052681467706212502'] // The channel IDs allowed having messages forwarded to the starboard
+const allowedChannelIDs = ['1043936292989317190','1043944028930052147','1047196335310393407','1052681467706212502'] // The channel IDs allowed having messages forwarded to the starboard
 const necessaryStars = 1 // The number of stars needed forward a message to the starboard
 const starboardChannelID = '1057418959672053811' // The channel ID of the starboard
 const loadLimit = 100 // The number of messages to load from the starboard channel
