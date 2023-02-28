@@ -10,11 +10,20 @@ module.exports = {
     const channel = await interaction.channel;
 
     if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) {
-      return interaction.reply({ content: '❌ Non hai i permessi necessari', ephemeral: true });
+      const errorEmbed = {
+        title: '❌ Si è verificato un errore',
+        description: 'Non hai i permessi necessari.',
+        color: '#FF0000',
+      };
+      return interaction.reply({ embeds: [errorEmbed], ephemeral: true });
     }
 
     await channel.bulkDelete(quantity);
 
-    await interaction.reply({ content: '✅ Chat pulita.', ephemeral: true });
+    const successEmbed = {
+      title: '✅ Chat pulita',
+      color: '#00FF00',
+    };
+    await interaction.reply({ embeds: [successEmbed], ephemeral: true });
   },
 };
