@@ -1,39 +1,20 @@
-const { SlashCommandBuilder, PermissionsBitField } = require('discord.js')
+const { SlashCommandBuilder, Permissions } = require('discord.js');
 
 module.exports = {
-	data: new SlashCommandBuilder()
-		.setName('clear')
-		.setDescription('Pulisci la chat')
-		.addIntegerOption((option) =>
-			option.setName('quantità').setDescription('La quantità di messaggi da rimuovere').setRequired(true)
-		),
-	async execute(interaction) {
-		const quantity = interaction.options.getInteger('quantità')
-		const channel = await interaction.channel
+  data: new SlashCommandBuilder()
+    .setName('clear')
+    .setDescription('Pulisci la chat')
+    .addIntegerOption(option => option.setName('quantità').setDescription('La quantità di messaggi da rimuovere').setRequired(true)),
+  async execute(interaction) {
+    const quantity = interaction.options.getInteger('quantità');
+    const channel = await interaction.channel;
 
-		if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
-			await interaction.reply({
-				embeds: [
-					{
-						title: `❌ Si è verificato un errore`,
-						description: `Non hai i permessi necessari`,
-						color: 15548997
-					}
-				],
-				ephemeral: true
-			})
-			return
-		}
+    if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) {
+      return interaction.reply({ content: 'Non hai i permessi necessari.', ephemeral: true });
+    }
 
-		await channel.bulkDelete(quantity)
+    await channel.bulkDelete(quantity);
 
-		await interaction.reply({
-			embeds: [
-				{
-					title: `✅ Chat pulita`,
-					color: 5763719
-				}
-			]
-		})
-	}
-}
+    await interaction.reply({ content: 'Chat pulita.', ephemeral: true });
+  },
+};
