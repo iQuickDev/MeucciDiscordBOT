@@ -10,11 +10,11 @@ module.exports = {
     const channel = await interaction.channel;
 
     if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) {
-      return interaction.reply({ content: 'Non hai i permessi necessari.', ephemeral: true });
+      return interaction.reply({ content: '❌ Non hai i permessi necessari', ephemeral: true });
     }
 
     await channel.bulkDelete(quantity);
 
-    await interaction.reply({ content: 'Chat pulita.', ephemeral: true });
+    await interaction.reply({ content: '✅ Chat pulita.', ephemeral: true });
   },
 };
